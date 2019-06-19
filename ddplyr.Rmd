@@ -113,17 +113,58 @@ names(gapminder)
 # get asian countries and pop in thousands
 gapminder %>% 
   filter(continent = "Asia", year == 2007) %>% 
-  mutate(pop_thousands = pop/1000 %>% 
+  mutate(pop_thousands = pop/1000) %>% 
   select(country, year, pop_thousands)
 
+mean(df$pop_thousands)
+```
+
+Learn the 'group_by()' function
+
+```{r}
+gapminder %>% 
+  filter(year == 2002) %>% 
+  group_by(continent) %>% 
+  mutate(cont_pop = sum(pop))
 
 ```
 
-
-Playing with data
+Add in 'summarize()'
 
 ```{r}
 
+gapminder %>% 
+  filter(year == 2002) %>% 
+  group_by(continent) %>% 
+  summarize(cont_pop = sum(pop)) #summarize by continent
+```
 
+Often good to ungroup after grouping data
+
+```{r}
+gapminder %>% 
+  group_by(continent, year) %>% 
+   mutate(cont_pop = sum(pop))
+  ungroup()
+```
+
+
+'arrange()'
+
+```{r}
+gapminder %>% 
+  group_by(continent,year) %>% 
+  summarize(cont_pop = sum(pop)) %>% 
+  arrange(year)
+
+# what is max gdp per continent
+
+gapminder %>% 
+  mutate(gdp = pop * gdpPercap) %>% # create new column with gdp
+  group_by(continent) %>% 
+  mutate(max_gdp = max(gdp)) %>% # create new column with max gdp
+  filter(gdp == max_gdp)
+
+  
 ```
 
