@@ -1,0 +1,180 @@
+---
+title: "ggplot2"
+output: html_document
+---
+
+```{r data}
+
+install.packages("tidyverse") 
+library(tidyverse)
+library(ggplot2)
+
+ohi_data <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/OHI_global_data.csv")
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r explore data}
+
+dim(ohi_data) # dimensions
+head(ohi_data)
+summary(ohi_data)
+table(ohi_data$georegion_one)
+table(ohi_data$georegion_two)
+
+
+```
+
+Start plotting
+To change where your plot appears as a default (in the plot screen vs in the code - go to tools - Rmarkdown - uncheck the box that says "show output inline...")
+
+Scatterplot
+
+```{r ggplot}
+
+ggplot(data=ohi_data, aes(x=georegion_one, y=OHI_score)) +
+  geom_point()
+
+ggplot(data=ohi_data, aes(x=georegion_one, y=OHI_score)) +
+  geom_jitter(width=0.1)
+
+```
+
+Note that you can add `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Boxplot
+
+```{r boxplot}
+
+ggplot(data = ohi_data, aes(x = georegion_one)) + 
+  geom_bar()
+
+```
+
+Multiple geoms explore
+
+```{r multiple geoms}
+
+ohi_summary<-read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/OHI_scores_georegion_summary.csv")
+
+ggplot(data=ohi_summary, aes(x = georegions, y = OHI_score_average)) +
+  geom_bar(stat="identity") +
+  geom_jitter(data = ohi_data, aes(x = georegion_one, y = OHI_score))
+
+```
+
+Adding a third variale with aes
+
+``` {r} 
+
+ggplot(data=ohi_data, aes(x=OHI_score, y=HDI, size = coastal_pop)) +
+  geom_point()
+
+ggplot(data=ohi_data, aes(x=OHI_score, y=HDI, shape = georegion_one)) +
+  geom_point()
+
+ggplot(data=ohi_data, aes(x=OHI_score, y=HDI, size = coastal_pop, color = georegion_one)) +
+  geom_point()
+
+```
+
+Themes
+
+black and white
+
+
+``` {r}
+
+ggplot(data=ohi_data, aes(x=OHI_score, y=HDI))+
+  geom_point() +
+  theme_bw()
+
+ggplot(data=ohi_data, aes(x=OHI_score, y=HDI))+
+  geom_point() +
+  theme_light()
+
+```
+
+
+
+Or write your own themes  ohi-science.org/data-science-training/ggplot2
+ScatterTheme created
+
+``` {r own theme}
+
+source('https://raw.githubusercontent.com/OHI-Science/ohiprep/master/src/R/scatterTheme.txt') 
+
+ggplot(data=ohi_data, aes(x=OHI_score, y=HDI))+
+  geom_point() +
+  scatterTheme
+
+```
+
+Change labels
+
+``` {r}
+
+ggplot(data=ohi_data, aes(x=OHI_score, y=HDI, color = georegion_one))+
+  geom_point() +
+  labs(y= "OHI score, 2017", 
+       x= "Human Development Index",
+       title = "Human development is good for oceans!",
+     color = "Georegions")
+```
+
+Colours
+
+Create a paletter of your own colors
+
+Or scale colours from one colour to another using scale_color_gradientn() with vector of colours
+
+``` {r}
+
+install.packages("RColorBrewer")
+library(RColorBrewer)
+
+display.brewer.all()
+
+my_palette <-brewer.pal(n=9,"YlOrRd")
+
+
+ggplot(data=ohi_data, aes(x=OHI_score, 
+                          y=OHI_trend, 
+                          color = HDI))+
+  geom_point(size = 3) +
+  scale_color_gradientn(colors = my_palette)
+
+ggplot(data=ohi_data, aes(x=OHI_score, 
+                          y=OHI_trend, 
+                          color = HDI))+
+  geom_point(size = 3) +
+  scale_color_gradientn(colors = c("blue","red"))
+
+ggplot(data=ohi_data, aes(x=OHI_score, 
+                          y=OHI_trend, 
+                          color = georegion_one))+
+  geom_point(size = 3) +
+  scale_color_manual(values=my_palette)
+
+my_paletter <- brewer.pal(n=12,"Set3")
+
+ggplot(data=ohi_data, aes(x=OHI_score, 
+                          y=OHI_trend, 
+                          color = georegion_one))+
+  geom_point(size = 3) +
+  scale_color_manual(values=my_palette)
+
+
+
+```
+
+
+Help?
+Cheatsheets?
+
+GO to toolbar - Help - Cheatsheets
