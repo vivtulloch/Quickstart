@@ -1,0 +1,72 @@
+---
+title: "Dplyr"
+author: "Viv Tulloch"
+date: "6/9/2019"
+output: html_document
+---
+
+shortcut for ``` cmd/ctrl+alt+i
+run = cmd + entr
+
+
+loading tidyverse
+
+```{r}
+library(tidyverse)
+
+```
+
+if tidyverse doesn't work load ddply, readr, gglpot2
+
+Load data
+```{r}
+# loading the gapminder dataset from github
+
+gapminder <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv")
+
+
+```
+
+
+```{r}
+
+head(gapminder)
+summary(gapminder)
+tail(gapminder)
+str(gapminder)  #structure
+names(gapminder)
+
+```
+
+Look at individual dataframe variables
+
+```{r}
+
+#show me the lifeExp column
+gapminder$lifeExp
+gapminder$continent
+
+```
+
+
+Ues ddplyr to 'filter()' or subset data row-wise
+
+```{r filter subset}
+
+filter(gapminder,lifeExp < 29)
+
+#just look at mexico
+
+filter(gapminder, country == Mexico, year==2002)
+
+brz <- filter(gapminder, country == Brazil, year >= 1987 & year <=2007)
+mean(brz$lifeExp)
+
+```
+
+Learning the 'select()' function
+
+```{r}
+select(gapminder, year, country, lifeExp)
+```
+
