@@ -7,7 +7,7 @@ output: html_document
 
 shortcut for ``` cmd/ctrl+alt+i
 run = cmd + entr
-
+<- alt - 
 
 loading tidyverse
 
@@ -67,6 +67,63 @@ mean(brz$lifeExp)
 Learning the 'select()' function
 
 ```{r}
+#these 2 lines do the same thing - first one selects columns, second drops columns
 select(gapminder, year, country, lifeExp)
+select(gapminder, -continent, -gdpPercap, -pop)
+```
+
+
+Using 'filter()' and 'select()' together
+
+```{r}
+gap_cambodia <- filter(gapminder, country = "Cambodia")
+gap_cambodia2 <- select(gap_cambodia, -continent, -lifeExp)
+```
+
+Pipe Operator
+
+Learning the pipe %>%
+ctrl + shift + M
+
+```{r}
+gapminder %>% head()
+head(gapminder)
+
+# create a new object first filtering for cambodia AND THEN dropping columns
+gap_cambodia <- filter(gapminder, country = "Cambodia") %>% 
+  select(-continent, -lifeExp)
+
+
+gap_mexico <- gapminder %>% 
+  filter(country = "Cambodia") %>%  # AND THEN
+  select(-continent, -lifeExp)
+
+
+```
+
+Learn 'mutate()' wich adds a new column
+then you tell R what to put in that column
+
+```{r}
+gapminder %>% 
+  mutate(gdp = pop * gdpPercap)  ## gdp is the first columns name
+
+names(gapminder)
+
+# get asian countries and pop in thousands
+gapminder %>% 
+  filter(continent = "Asia", year == 2007) %>% 
+  mutate(pop_thousands = pop/1000 %>% 
+  select(country, year, pop_thousands)
+
+
+```
+
+
+Playing with data
+
+```{r}
+
+
 ```
 
